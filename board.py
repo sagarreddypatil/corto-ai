@@ -36,6 +36,18 @@ def piece_to_str(piece: int):
     return out
 
 
+def str_to_piece(s: str):
+    assert len(s) == 4
+    s = s.lower()
+
+    return (
+        (1 if s[0] == "d" else 0) << 3
+        | (1 if s[1] == "s" else 0) << 2
+        | (1 if s[2] == "b" else 0) << 1
+        | (1 if s[3] == "h" else 0)
+    )
+
+
 class Board:
     def __init__(self):
         self.next_piece = None
@@ -195,18 +207,27 @@ def minmax(board: Board, max_depth=3):
 if __name__ == "__main__":
     board = Board()
 
-    board.board = [
-        [None, None, None, None],
-        [None, None, None, None],
-        [None, None, None, None],
-        [None, None, None, None],
+    board_mat = [
+        ["lcsn", None, None, "lsbn"],
+        ["lcsh", "dssh", "lcbh", "dsbn"],
+        ["dcbn", None, None, "dcbh"],
+        ["lssn", "lsbh", "dcsh", "lssh"],
     ]
+
+    for x in range(4):
+        for y in range(4):
+            board.board[x][y] = (
+                str_to_piece(board_mat[x][y]) if board_mat[x][y] is not None else None
+            )
+
+    board.next_piece = str_to_piece("dsbh")
 
     # you play by writing moves here lmao
-    moves = [
-    ]
+    moves = []
 
     for move in moves:
+        pos, piece = move
+        piece = str_to_piece(piece)
         board = board.with_action(*move)
 
     print(board)
